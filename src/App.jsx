@@ -14,24 +14,24 @@ const columns = [
   },
 ];
 
-const fetchData = async () => {
-  try {
-    const response = await fetch(
-      'https://generic-api-backend.mateusschverz.repl.co/usuarios/'
-    );
-    const data = await response.json();
-    setData(data);
-    console.log(data);
-    // Realize as operações necessárias com os dados
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 const App = () => {
   const [data, setData] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [tableColumns, setTableColumns] = useState(columns);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        'https://generic-api-backend.mateusschverz.repl.co/usuarios/'
+      );
+      const data = await response.json();
+      setData(data);
+      console.log(data);
+      // Realize as operações necessárias com os dados
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     fetchData();
