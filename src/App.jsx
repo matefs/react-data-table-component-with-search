@@ -1,23 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 
-const columns = [
-  {
-    name: 'ID',
-    selector: 'id',
-    sortable: true,
-  },
-  {
-    name: 'Nome',
-    selector: 'nome',
-    sortable: true,
-  },
-];
-
 const App = () => {
   const [data, setData] = useState([]);
   const [searchText, setSearchText] = useState('');
+
+  const columns = [
+    {
+      name: 'ID',
+      selector: 'id',
+      sortable: true,
+    },
+    {
+      name: 'Nome',
+      selector: 'nome',
+      sortable: true,
+    },
+    {
+      name: 'Action',
+      button: true,
+      cell: (row) => (
+        <button
+          className="btn btn-outline btn-xs"
+          onClick={(e) => handleButtonClick(e, row.id)}
+        >
+          Edit
+        </button>
+      ),
+    },
+  ];
   const [tableColumns, setTableColumns] = useState(columns);
+
+  const handleButtonClick = (e, id) => {
+    e.preventDefault();
+    console.log('Row Id', id);
+  };
 
   const fetchData = async () => {
     try {
@@ -39,7 +56,7 @@ const App = () => {
 
   function handleSearchText(e) {
     setSearchText(e.target.value);
-    e.target.value == '' || ' ' ? fetchData() : ''; 
+    e.target.value == '' || ' ' ? fetchData() : '';
   }
 
   function fetchSearch() {
