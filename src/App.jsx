@@ -39,8 +39,7 @@ const App = () => {
 
   function handleSearchText(e) {
     setSearchText(e.target.value);
-    e.target.value == '' || ' ' ? fetchData() : '';
-    //e.target.value == '' ? alert() : ''
+    e.target.value == '' || ' ' ? fetchData() : ''; 
   }
 
   function fetchSearch() {
