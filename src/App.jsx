@@ -1,12 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
-
-const data = [
-  { id: 1, name: 'John Doe' },
-  { id: 2, name: 'Jane Doe' },
-  { id: 3, name: 'John Smith' },
-  { id: 4, name: 'Jane Smith' },
-];
 
 const columns = [
   {
@@ -15,35 +8,73 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'Name',
-    selector: 'name',
+    name: 'Nome',
+    selector: 'nome',
     sortable: true,
   },
 ];
 
+const fetchData = async () => {
+  try {
+    const response = await fetch(
+      'https://generic-api-backend.mateusschverz.repl.co/usuarios/'
+    );
+    const data = await response.json();
+    setData(data);
+    console.log(data);
+    // Realize as operações necessárias com os dados
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const App = () => {
+  const [data, setData] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [tableColumns, setTableColumns] = useState(columns);
 
-  const handleSearch = (e) => {
-    setSearchText(e.target.value);
-  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  const filteredData = data.filter((item) =>
-    item.name.toLowerCase().includes(searchText.toLowerCase())
-  );
+  function handleSearchText(e) {
+    setSearchText(e.target.value);
+    e.target.value == '' || ' ' ? fetchData() : '';
+    //e.target.value == '' ? alert() : ''
+  }
+
+  function fetchSearch() {
+    fetch(
+      `https://generic-api-backend.mateusschverz.repl.co/usuarios/?q=${searchText}`
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw new Error('Network response was not ok');
+        }
+      })
+      .then((data) => {
+        setData(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   return (
     <div>
       <input
         type="text"
-        placeholder="Search"
         value={searchText}
-        onChange={handleSearch}
+        onChange={handleSearchText}
+        placeholder="Pesquisar"
       />
+      <button onClick={fetchSearch}> Pesquisar </button>
+
       <DataTable
-        title="Users"
-        data={filteredData}
+        title="Usuários"
+        data={data}
         columns={tableColumns}
         pagination
       />
